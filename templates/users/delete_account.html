@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Delete Account — VoteStar{% endblock %}
+{% block content %}
+
+<div class="form-page">
+  <div class="form-card form-card--danger">
+    <div class="form-card-header">
+      <span class="form-icon">⚠️</span>
+      <h1 class="form-title">Delete Your Account</h1>
+      <p class="form-subtitle">This is permanent. There is no undo.</p>
+    </div>
+
+    <div class="danger-box">
+      <p>Deleting your account will remove:</p>
+      <ul class="danger-list">
+        <li>Your profile and login credentials</li>
+        <li>All topics you created</li>
+        <li>All votes you cast</li>
+        <li>All your notifications</li>
+      </ul>
+    </div>
+
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger btn-full">I understand — Delete My Account</button>
+      <a href="{% url 'users:profile' %}" class="btn btn-ghost btn-full">Cancel, keep my account</a>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

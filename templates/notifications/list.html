@@ -1,0 +1,46 @@
+{% extends 'base.html' %}
+{% block title %}Notifications — VoteStar{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <h1 class="page-title">Notifications</h1>
+    <p class="page-subtitle">Updates on your topics and votes</p>
+  </div>
+  {% if notifications %}
+    <form method="post" action="{% url 'notifications:clear' %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-ghost btn-sm">Clear All</button>
+    </form>
+  {% endif %}
+</div>
+
+{% if notifications %}
+  <div class="notifications-list">
+    {% for notif in notifications %}
+      <div class="notif-item {% if not notif.is_read %}notif-item--unread{% endif %}">
+        <div class="notif-icon">
+          {% if notif.topic.is_active %}🔔{% else %}✅{% endif %}
+        </div>
+        <div class="notif-content">
+          <p class="notif-message">{{ notif.message }}</p>
+          <div class="notif-meta">
+            <a href="{% url 'topics:detail' notif.topic.pk %}" class="notif-link">
+              View "{{ notif.topic.title }}"
+            </a>
+            <span class="notif-time">{{ notif.created_at|timesince }} ago</span>
+          </div>
+        </div>
+      </div>
+    {% endfor %}
+  </div>
+{% else %}
+  <div class="empty-state">
+    <div class="empty-icon">🔔</div>
+    <h2>No notifications</h2>
+    <p>You'll be notified when your topics close or when topics you voted on expire.</p>
+    <a href="{% url 'topics:list' %}" class="btn btn-primary">Browse Topics</a>
+  </div>
+{% endif %}
+
+{% endblock %}

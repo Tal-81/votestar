@@ -1,0 +1,100 @@
+{% extends 'base.html' %}
+{% block title %}Profile — VoteStar{% endblock %}
+{% block content %}
+
+<div class="profile-page">
+
+  <div class="profile-header">
+    <div class="profile-avatar">{{ user.display_name|first|upper }}</div>
+    <div class="profile-info">
+      <h1 class="profile-name">{{ user.display_name }}</h1>
+      <p class="profile-email">{{ user.email }}</p>
+      <p class="profile-joined">Member since {{ user.date_joined|date:"F Y" }}</p>
+    </div>
+  </div>
+
+  <div class="profile-stats">
+    <div class="pstat">
+      <span class="pstat-value">{{ topics|length }}</span>
+      <span class="pstat-label">Topics</span>
+    </div>
+    <div class="pstat">
+      <span class="pstat-value">{{ votes|length }}</span>
+      <span class="pstat-label">Votes Cast</span>
+    </div>
+  </div>
+
+  <!-- My Topics -->
+  <section class="profile-section">
+    <h2 class="section-title">My Topics</h2>
+    {% if topics %}
+      <div class="profile-list">
+        {% for topic in topics %}
+          <div class="profile-item">
+            <div class="profile-item-info">
+              <a href="{% url 'topics:detail' topic.pk %}" class="profile-item-title">{{ topic.title }}</a>
+              <span class="profile-item-meta">
+                {{ topic.vote_count }} vote{{ topic.vote_count|pluralize }} ·
+                {% if topic.is_active %}
+                  <span class="status-active">● Live</span>
+                {% else %}
+                  <span class="status-closed">✓ Closed</span>
+                {% endif %}
+                {% if topic.average_rating %} · ★ {{ topic.average_rating }}{% endif %}
+              </span>
+            </div>
+            <a href="{% url 'topics:detail' topic.pk %}" class="btn btn-ghost btn-sm">View</a>
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="empty-text">You haven't created any topics yet. <a href="{% url 'topics:create' %}">Create one →</a></p>
+    {% endif %}
+  </section>
+
+  <!-- My Votes -->
+  <section class="profile-section">
+    <h2 class="section-title">My Votes</h2>
+    {% if votes %}
+      <div class="profile-list">
+        {% for vote in votes %}
+          <div class="profile-item">
+            <div class="profile-item-info">
+              <a href="{% url 'topics:detail' vote.topic.pk %}" class="profile-item-title">{{ vote.topic.title }}</a>
+              <span class="profile-item-meta">
+                Rated: {% for i in "12345" %}{% if forloop.counter <= vote.rating %}★{% else %}☆{% endif %}{% endfor %}
+                · {{ vote.updated_at|date:"N j, Y" }}
+              </span>
+            </div>
+            {% if vote.topic.is_active %}
+              <a href="{% url 'topics:detail' vote.topic.pk %}" class="btn btn-ghost btn-sm">Edit</a>
+            {% else %}
+              <span class="badge badge-closed">Closed</span>
+            {% endif %}
+          </div>
+        {% endfor %}
+      </div>
+    {% else %}
+      <p class="empty-text">You haven't voted on anything yet. <a href="{% url 'topics:list' %}">Browse topics →</a></p>
+    {% endif %}
+  </section>
+
+  <!-- Danger Zone -->
+  <section class="profile-section danger-section">
+    <h2 class="section-title section-title--danger">Danger Zone</h2>
+    <div class="danger-zone">
+      <div>
+        <strong>Delete Account</strong>
+        <p>This will permanently delete your account, all your topics, and all your votes.</p>
+      </div>
+      {% if user.is_superuser %}
+        <span class="badge badge-protected">Admin accounts are protected</span>
+      {% else %}
+        <a href="{% url 'users:delete_account' %}" class="btn btn-danger btn-sm">Delete Account</a>
+      {% endif %}
+    </div>
+  </section>
+
+</div>
+
+{% endblock %}

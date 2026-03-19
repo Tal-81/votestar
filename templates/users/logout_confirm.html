@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Logout — VoteStar{% endblock %}
+{% block content %}
+
+<div class="form-page">
+  <div class="form-card">
+    <div class="form-card-header">
+      <span class="form-icon">👋</span>
+      <h1 class="form-title">Log Out</h1>
+      <p class="form-subtitle">Are you sure you want to log out?</p>
+    </div>
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-primary btn-full">Yes, Log Out</button>
+      <a href="{% url 'topics:list' %}" class="btn btn-ghost btn-full">Cancel</a>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

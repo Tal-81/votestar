@@ -1,0 +1,27 @@
+{% extends 'base.html' %}
+{% block title %}Delete Topic — VoteStar{% endblock %}
+{% block content %}
+
+<div class="form-page">
+  <div class="form-card form-card--danger">
+    <div class="form-card-header">
+      <span class="form-icon">🗑</span>
+      <h1 class="form-title">Delete Topic</h1>
+      <p class="form-subtitle">This action is permanent and cannot be undone.</p>
+    </div>
+
+    <div class="danger-box">
+      <p>You are about to delete:</p>
+      <strong>"{{ topic.title }}"</strong>
+      <p class="danger-note">All {{ topic.vote_count }} vote{{ topic.vote_count|pluralize }} on this topic will also be deleted.</p>
+    </div>
+
+    <form method="post">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-danger btn-full">Yes, Delete Permanently</button>
+      <a href="{% url 'topics:detail' topic.pk %}" class="btn btn-ghost btn-full">Cancel</a>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

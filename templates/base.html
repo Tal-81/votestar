@@ -7,29 +7,33 @@
   {% load static %}
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link href="https://fonts.googleapis.com/css2?family=Sora:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
-  <link rel="stylesheet" href="">
+  <link rel="stylesheet" href="{% static 'css/main.css' %}">
 </head>
 <body>
 
   <!-- Navigation -->
   <nav class="navbar">
     <div class="nav-inner">
-      <a href="/">
+      <a href="{% url 'topics:list' %}" class="nav-logo">
         <span class="logo-star">★</span> VoteStar
       </a>
       <div class="nav-links">
         {% if user.is_authenticated %}
-          <a href="" class="btn btn-sm btn-primary">+ New Topic</a>
-          <a href="" class="nav-link notif-link">
+          <a href="{% url 'topics:create' %}" class="btn btn-sm btn-primary">+ New Topic</a>
+          <a href="{% url 'notifications:list' %}" class="nav-link notif-link">
             🔔
-
-          <form method="post" action="" style="display:inline">
+            {% if unread_notifications_count %}
+              <span class="notif-badge">{{ unread_notifications_count }}</span>
+            {% endif %}
+          </a>
+          <a href="{% url 'users:profile' %}" class="nav-link">{{ user.display_name }}</a>
+          <form method="post" action="{% url 'users:logout' %}" style="display:inline">
             {% csrf_token %}
             <button type="submit" class="btn btn-sm btn-ghost">Logout</button>
           </form>
         {% else %}
-          <a href="" class="btn btn-sm btn-ghost">Login</a>
-          <a href="}" class="btn btn-sm btn-primary">Sign Up</a>
+          <a href="{% url 'users:login' %}" class="btn btn-sm btn-ghost">Login</a>
+          <a href="{% url 'users:register' %}" class="btn btn-sm btn-primary">Sign Up</a>
         {% endif %}
       </div>
     </div>
@@ -39,9 +43,9 @@
   {% if messages %}
     <div class="messages-container">
       {% for msg in messages %}
-        <div class="">
+        <div class="message message-{{ msg.tags }}">
           {{ msg }}
-          <button class="msg-close" onclick="">×</button>
+          <button class="msg-close" onclick="this.parentElement.remove()">×</button>
         </div>
       {% endfor %}
     </div>
@@ -57,5 +61,6 @@
     <p>VoteStar — share your opinions, one star at a time ★</p>
   </footer>
 
+  <script src="{% static 'js/stars.js' %}"></script>
 </body>
 </html>

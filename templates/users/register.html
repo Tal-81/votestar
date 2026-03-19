@@ -1,0 +1,39 @@
+{% extends 'base.html' %}
+{% block title %}Sign Up — VoteStar{% endblock %}
+{% block content %}
+
+<div class="form-page">
+  <div class="form-card">
+    <div class="form-card-header">
+      <span class="form-icon">★</span>
+      <h1 class="form-title">Create Account</h1>
+      <p class="form-subtitle">Join VoteStar and start sharing your ratings</p>
+    </div>
+
+    <form method="post" class="auth-form">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="field-group">
+          <label class="field-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.help_text %}
+            <p class="field-help">{{ field.help_text }}</p>
+          {% endif %}
+          {% if field.errors %}
+            <ul class="field-errors">
+              {% for err in field.errors %}<li>{{ err }}</li>{% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      {% endfor %}
+
+      <button type="submit" class="btn btn-primary btn-full">Create Account</button>
+    </form>
+
+    <div class="form-footer">
+      Already have an account? <a href="{% url 'users:login' %}">Log in</a>
+    </div>
+  </div>
+</div>
+
+{% endblock %}

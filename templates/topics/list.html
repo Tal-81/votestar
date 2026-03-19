@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% load topic_tags %}
+{% block title %}Topics — VoteStar{% endblock %}
+{% block content %}
+
+<div class="page-header">
+  <div class="page-header-inner">
+    <h1 class="page-title">All Topics</h1>
+    <p class="page-subtitle">Rate what matters. Every voice counts.</p>
+  </div>
+  {% if user.is_authenticated %}
+    <a href="{% url 'topics:create' %}" class="btn btn-primary">+ Create Topic</a>
+  {% endif %}
+</div>
+
+{% if topics %}
+  <div class="topics-grid">
+    {% for topic in topics %}
+      <article class="topic-card {% if not topic.is_active %}topic-card--closed{% endif %}">
+        <div class="topic-card-header">
+          <span class="topic-status {% if topic.is_active %}status-active{% else %}status-closed{% endif %}">
+            {% if topic.is_active %}● Live{% else %}✓ Closed{% endif %}
+          </span>
+          {% if topic.average_rating %}
+            <span class="topic-avg-rating">
+              ★ {{ topic.average_rating }}
+            </span>
+          {% endif %}
+        </div>
+
+        <h2 class="topic-title">
+          <a href="{% url 'topics:detail' topic.pk %}">{{ topic.title }}</a>
+        </h2>
+
+        {% if topic.description %}
+          <p class="topic-description">{{ topic.description|truncatechars:120 }}</p>
+        {% endif %}
+
+        <div class="topic-meta">
+          <span class="topic-author">by {{ topic.created_by.display_name }}</span>
+          <span class="topic-separator">·</span>
+          <span class="topic-votes">{{ topic.vote_count }} vote{{ topic.vote_count|pluralize }}</span>
+          <span class="topic-separator">·</span>
+          <span class="topic-time {% if topic.is_active %}time-active{% endif %}">
+            {{ topic.time_remaining }}
+          </span>
+        </div>
+
+        <!-- Show user's current vote if any -->
+        {% if user.is_authenticated and topic.pk in user_votes %}
+          <div class="your-vote-badge">
+            Your vote: {% for i in "12345" %}{% if forloop.counter <= user_votes|get_item:topic.pk %}★{% else %}☆{% endif %}{% endfor %}
+          </div>
+        {% endif %}
+
+        <a href="{% url 'topics:detail' topic.pk %}" class="topic-card-link">
+          {% if topic.is_active %}Vote now →{% else %}View results →{% endif %}
+        </a>
+      </article>
+    {% endfor %}
+  </div>
+
+{% else %}
+  <div class="empty-state">
+    <div class="empty-icon">📭</div>
+    <h2>No topics yet</h2>
+    <p>Be the first to create a topic and get people voting!</p>
+    {% if user.is_authenticated %}
+      <a href="{% url 'topics:create' %}" class="btn btn-primary">Create the first topic</a>
+    {% else %}
+      <a href="{% url 'users:register' %}" class="btn btn-primary">Sign up to start</a>
+    {% endif %}
+  </div>
+{% endif %}
+
+{% endblock %}

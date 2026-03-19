@@ -1,0 +1,38 @@
+{% extends 'base.html' %}
+{% block title %}New Topic — VoteStar{% endblock %}
+{% block content %}
+
+<div class="form-page">
+  <div class="form-card">
+    <div class="form-card-header">
+      <span class="form-icon">📝</span>
+      <h1 class="form-title">Create a Topic</h1>
+      <p class="form-subtitle">Your topic stays open for 72 hours. You can only have one active topic at a time.</p>
+    </div>
+
+    <form method="post" class="auth-form">
+      {% csrf_token %}
+      {% for field in form %}
+        <div class="field-group">
+          <label class="field-label" for="{{ field.id_for_label }}">{{ field.label }}</label>
+          {{ field }}
+          {% if field.errors %}
+            <ul class="field-errors">
+              {% for err in field.errors %}<li>{{ err }}</li>{% endfor %}
+            </ul>
+          {% endif %}
+        </div>
+      {% endfor %}
+
+      <div class="topic-notice">
+        <span>⏱</span>
+        <span>Voting will close automatically 72 hours after creation.</span>
+      </div>
+
+      <button type="submit" class="btn btn-primary btn-full">Launch Topic</button>
+      <a href="{% url 'topics:list' %}" class="btn btn-ghost btn-full">Cancel</a>
+    </form>
+  </div>
+</div>
+
+{% endblock %}

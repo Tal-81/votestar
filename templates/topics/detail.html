@@ -1,0 +1,193 @@
+{% extends 'base.html' %}
+{% load topic_tags %}
+{% block title %}{{ topic.title }} — VoteStar{% endblock %}
+{% block content %}
+<script>
+(function() {
+  var counts = {};
+  {% for vote in topic.votes.all %}counts["{{ vote.rating }}"] = (counts["{{ vote.rating }}"] || 0) + 1;{% endfor %}
+  window.ratingCounts = counts;
+})();
+</script>
+
+<div class="detail-layout">
+
+  <!-- Topic Card -->
+  <div class="detail-main">
+    <div class="detail-card">
+      <div class="detail-header">
+        <div class="detail-meta-top">
+          <span class="topic-status {% if topic.is_active %}status-active{% else %}status-closed{% endif %}">
+            {% if topic.is_active %}● Live{% else %}✓ Closed{% endif %}
+          </span>
+          <span class="topic-time {% if topic.is_active %}time-active{% endif %}">
+            {{ topic.time_remaining }}
+          </span>
+        </div>
+        <h1 class="detail-title">{{ topic.title }}</h1>
+        {% if topic.description %}
+          <p class="detail-description">{{ topic.description }}</p>
+        {% endif %}
+        <p class="detail-author">
+          Created by <strong>{{ topic.created_by.display_name }}</strong>
+          on {{ topic.created_at|date:"N j, Y" }}
+        </p>
+      </div>
+
+      <!-- Stats -->
+      <div class="stats-row">
+        <div class="stat">
+          <span class="stat-value">{{ topic.vote_count }}</span>
+          <span class="stat-label">Vote{{ topic.vote_count|pluralize }}</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">
+            {% if topic.average_rating %}{{ topic.average_rating }}★{% else %}—{% endif %}
+          </span>
+          <span class="stat-label">Avg Rating</span>
+        </div>
+        <div class="stat">
+          <span class="stat-value">
+            {% if topic.is_active %}Open{% else %}Closed{% endif %}
+          </span>
+          <span class="stat-label">Status</span>
+        </div>
+      </div>
+
+      <!-- Star Rating Distribution -->
+      {% if topic.vote_count > 0 %}
+        <div class="rating-distribution">
+          <h3 class="dist-title">Rating Breakdown</h3>
+          {% for i in "54321" %}
+            {% with star=forloop.counter reversed_i=i %}
+              <div class="dist-row">
+                <span class="dist-label">{{ i }}★</span>
+                <div class="dist-bar-wrap">
+                  {% with count=topic.votes.all %}
+                    <div class="dist-bar" style="width: 0%" data-star="{{ i }}" data-total="{{ topic.vote_count }}"></div>
+                  {% endwith %}
+                </div>
+              </div>
+            {% endwith %}
+          {% endfor %}
+        </div>
+      {% endif %}
+
+      <!-- Owner actions -->
+      {% if user == topic.created_by %}
+        <div class="owner-actions">
+          <form method="post" action="{% url 'topics:delete' topic.pk %}"
+                onsubmit="return confirm('Delete this topic? This cannot be undone.')">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-sm">🗑 Delete Topic</button>
+          </form>
+        </div>
+      {% endif %}
+    </div>
+  </div>
+
+  <!-- Vote Panel -->
+  <div class="detail-sidebar">
+    {% if user.is_authenticated %}
+
+      {% if topic.is_active %}
+
+        {% if user_vote %}
+          <!-- Update / Withdraw vote -->
+          <div class="vote-panel">
+            <h2 class="vote-panel-title">Your Vote</h2>
+            <div class="current-vote-display">
+              {% for i in "12345" %}
+                <span class="star-display {% if forloop.counter <= user_vote.rating %}star-filled{% endif %}">★</span>
+              {% endfor %}
+              <span class="vote-label">{{ user_vote.rating }} / 5 stars</span>
+            </div>
+
+            <form method="post" action="{% url 'votes:update' topic.pk %}" class="star-form" id="updateVoteForm">
+              {% csrf_token %}
+              <input type="hidden" name="rating" id="updateRatingInput" value="{{ user_vote.rating }}">
+              <div class="star-picker" data-target="updateRatingInput">
+                {% for i in "12345" %}
+                  <button type="button" class="star-btn {% if forloop.counter <= user_vote.rating %}star-btn--active{% endif %}"
+                          data-value="{{ forloop.counter }}">★</button>
+                {% endfor %}
+              </div>
+              <button type="submit" class="btn btn-primary btn-full">Update Vote</button>
+            </form>
+
+            <form method="post" action="{% url 'votes:delete' topic.pk %}"
+                  onsubmit="return confirm('Withdraw your vote?')">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-ghost btn-full btn-sm">Withdraw vote</button>
+            </form>
+          </div>
+
+        {% else %}
+          <!-- Cast new vote -->
+          <div class="vote-panel">
+            <h2 class="vote-panel-title">Cast Your Vote</h2>
+            <p class="vote-hint">Tap a star to select your rating</p>
+
+            <form method="post" action="{% url 'votes:create' topic.pk %}" class="star-form" id="castVoteForm">
+              {% csrf_token %}
+              <input type="hidden" name="rating" id="castRatingInput" value="">
+              <div class="star-picker" data-target="castRatingInput">
+                {% for i in "12345" %}
+                  <button type="button" class="star-btn" data-value="{{ forloop.counter }}">★</button>
+                {% endfor %}
+              </div>
+              <button type="submit" class="btn btn-primary btn-full" id="castSubmitBtn" disabled>
+                Submit Vote
+              </button>
+            </form>
+          </div>
+        {% endif %}
+
+      {% else %}
+        <!-- Topic closed -->
+        <div class="vote-panel vote-panel--closed">
+          <div class="closed-icon">🔒</div>
+          <h2 class="vote-panel-title">Voting Closed</h2>
+          <p>This topic expired on {{ topic.end_time|date:"N j, Y g:i A" }}.</p>
+          {% if user_vote %}
+            <div class="your-final-vote">
+              <p>Your rating:</p>
+              {% for i in "12345" %}
+                <span class="star-display {% if forloop.counter <= user_vote.rating %}star-filled{% endif %}">★</span>
+              {% endfor %}
+            </div>
+          {% endif %}
+        </div>
+      {% endif %}
+
+    {% else %}
+      <div class="vote-panel vote-panel--guest">
+        <div class="guest-icon">⭐</div>
+        <h2 class="vote-panel-title">Want to vote?</h2>
+        <p>Sign in or create an account to cast your rating.</p>
+        <a href="{% url 'users:login' %}?next={{ request.path }}" class="btn btn-primary btn-full">Login</a>
+        <a href="{% url 'users:register' %}" class="btn btn-ghost btn-full">Create Account</a>
+      </div>
+    {% endif %}
+  </div>
+
+</div>
+
+<!-- Voters List -->
+{% if topic.votes.exists %}
+  <div class="voters-section">
+    <h3 class="voters-title">Votes ({{ topic.vote_count }})</h3>
+    <div class="voters-grid">
+      {% for vote in topic.votes.all %}
+        <div class="voter-chip">
+          <span class="voter-name">{{ vote.user.display_name }}</span>
+          <span class="voter-rating">
+            {% for i in "12345" %}{% if forloop.counter <= vote.rating %}★{% endif %}{% endfor %}
+          </span>
+        </div>
+      {% endfor %}
+    </div>
+  </div>
+{% endif %}
+
+{% endblock %}
