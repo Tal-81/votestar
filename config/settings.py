@@ -1,7 +1,3 @@
-"""
-config/settings.py
-Production-ready Django settings for VoteStar.
-"""
 import os
 from pathlib import Path
 from decouple import config
@@ -58,7 +54,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# Configure the database using dj_database_url_____________
+# Database configuration using dj_database_url for Heroku compatibility______
 DATABASES = {
     'default': dj_database_url.config(
         default=os.environ.get('DATABASE_URL'),
@@ -107,3 +103,4 @@ if not DEBUG:
     CSRF_COOKIE_SECURE = True
     SESSION_COOKIE_NAME = '__Secure-sessionid'
     CSRF_COOKIE_NAME = '__Secure-csrftoken' 
+  

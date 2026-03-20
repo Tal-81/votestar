@@ -5,7 +5,9 @@
 <script>
 (function() {
   var counts = {};
-  {% for vote in topic.votes.all %}counts["{{ vote.rating }}"] = (counts["{{ vote.rating }}"] || 0) + 1;{% endfor %}
+  {% for vote in topic.votes.all %}
+  counts["{{ vote.rating }}"] = (counts["{{ vote.rating }}"] || 0) + 1;
+  {% endfor %}
   window.ratingCounts = counts;
 })();
 </script>
