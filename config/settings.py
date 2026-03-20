@@ -13,13 +13,6 @@ SECRET_KEY = config('SECRET_KEY')
 DEBUG = config('DEBUG', default=False, cast=bool)
 ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=lambda v: [s.strip() for s in v.split(',')])
 
-# if DEBUG:
-#     ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='localhost,127.0.0.1', cast=lambda v: [s.strip() for s in v.split(',')])
-# else:
-#     ALLOWED_HOSTS = ['votestar-d7391575c13f.herokuapp.com']
-
-# ALLOWED_HOSTS = config('ALLOWED_HOSTS', default='votestar-d7391575c13f.herokuapp.com').split(',')
-
 INSTALLED_APPS = [
     'django.contrib.admin',
     'django.contrib.auth',
@@ -65,13 +58,7 @@ TEMPLATES = [
 
 WSGI_APPLICATION = 'config.wsgi.application'
 
-# DATABASES = {
-#     'default': dj_database_url.config(
-#         default=config('DATABASE_URL', default='sqlite:///db.sqlite3'),
-#         conn_max_age=600,
-#     )
-# }
-
+# Configure the database using dj_database_url_____________
 DATABASES = {
     'default': dj_database_url.config(
         default=os.environ.get('DATABASE_URL'),
