@@ -1,4 +1,3 @@
-"""users/views.py"""
 from django.shortcuts import render, redirect
 from django.contrib.auth import login, logout, authenticate
 from django.contrib.auth.decorators import login_required
@@ -14,7 +13,10 @@ def register_view(request):
         if form.is_valid():
             user = form.save()
             login(request, user)
-            messages.success(request, f'Welcome, {user.display_name}! Your account has been created.')
+            messages.success(
+                request,
+                f'Welcome, {user.display_name}! Your account has been created.'
+                )
             return redirect('topics:list')
     else:
         form = RegisterForm()
@@ -67,9 +69,12 @@ def delete_account_view(request):
         not even by the superuser themselves.
       - CASCADE deletes topics and votes automatically for normal users.
     """
-    # ── Block superuser deletion ──────────────────────────────────────────────
+    # ── Block superuser deletion ─────────────────────────────────────────────
     if request.user.is_superuser:
-        messages.error(request, 'Admin accounts cannot be deleted. Contact your system administrator.')
+        messages.error(
+         request,
+         'Admin accounts cannot be deleted. Contact your system administrator.'
+        )
         return redirect('users:profile')
 
     if request.method == 'POST':

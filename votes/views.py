@@ -1,15 +1,16 @@
 """
-votes/views.py
 All vote mutations go through POST-only views (no GET forms needed).
 Business rules enforced here:
   - 72h window (topic.is_active)
   - one vote per user per topic (unique_together + get_or_create)
   - only owner can update/delete their own vote
 """
+
 from django.shortcuts import get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
 from django.utils import timezone
+
 from topics.models import Topic
 from .models import Vote
 from .forms import VoteForm
@@ -17,10 +18,16 @@ from notifications.utils import maybe_create_expiry_notification
 
 
 def _get_active_topic_or_error(pk, request):
-    """Helper: fetch topic and check it's still open. Returns (topic, error_bool)."""
+    """Helper: fetch topic and check it's still open.
+
+    Returns (topic, error_bool).
+    """
     topic = get_object_or_404(Topic, pk=pk)
     if not topic.is_active:
-        messages.error(request, 'Voting is closed — this topic has expired.')
+        messages.error(
+            request,
+            'Voting is closed — this topic has expired.'
+        )
         return topic, True
     return topic, False
 
@@ -37,7 +44,10 @@ def vote_create_view(request, topic_pk):
 
     # Check user hasn't already voted
     if Vote.objects.filter(user=request.user, topic=topic).exists():
-        messages.warning(request, 'You have already voted on this topic.')
+        messages.warning(
+            request,
+            'You have already voted on this topic.'
+        )
         return redirect('topics:detail', pk=topic_pk)
 
     form = VoteForm(request.POST)
@@ -46,9 +56,15 @@ def vote_create_view(request, topic_pk):
         vote.user = request.user
         vote.topic = topic
         vote.save()
-        messages.success(request, f'You rated this {vote.rating}★ — thanks for voting!')
+        messages.success(
+            request,
+            f'You rated this {vote.rating}★ — thanks for voting!'
+        )
     else:
-        messages.error(request, 'Invalid rating. Please choose 1–5 stars.')
+        messages.error(
+            request,
+            'Invalid rating. Please choose 1–5 stars.'
+        )
 
     return redirect('topics:detail', pk=topic_pk)
 
@@ -67,9 +83,15 @@ def vote_update_view(request, topic_pk):
     form = VoteForm(request.POST, instance=vote)
     if form.is_valid():
         form.save()
-        messages.success(request, f'Vote updated to {vote.rating}★')
+        messages.success(
+            request,
+            f'Vote updated to {vote.rating}★'
+        )
     else:
-        messages.error(request, 'Invalid rating. Please choose 1–5 stars.')
+        messages.error(
+            request,
+            'Invalid rating. Please choose 1–5 stars.'
+        )
 
     return redirect('topics:detail', pk=topic_pk)
 
@@ -86,5 +108,9 @@ def vote_delete_view(request, topic_pk):
 
     vote = get_object_or_404(Vote, user=request.user, topic=topic)
     vote.delete()
-    messages.success(request, 'Your vote has been withdrawn.')
+    messages.success(
+        request,
+        'Your vote has been withdrawn.'
+    )
+
     return redirect('topics:detail', pk=topic_pk)

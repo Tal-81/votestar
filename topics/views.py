@@ -11,10 +11,17 @@ from notifications.utils import maybe_create_expiry_notification
 
 def topic_list_view(request):
     """Public list of all topics, newest first."""
-    topics = Topic.objects.select_related('created_by').prefetch_related('votes')
+    topics = (
+            Topic.objects
+            .select_related('created_by')
+            .prefetch_related('votes')
+        )
     user_votes = {}
     if request.user.is_authenticated:
-        votes = Vote.objects.filter(user=request.user).values('topic_id', 'rating')
+        votes = (
+            Vote.objects
+            .filter(user=request.user).values('topic_id', 'rating')
+        )
         user_votes = {v['topic_id']: v['rating'] for v in votes}
     return render(request, 'topics/list.html', {
         'topics': topics,
@@ -25,10 +32,14 @@ def topic_list_view(request):
 def topic_detail_view(request, pk):
     """Detail view for a single topic."""
     topic = get_object_or_404(
-        Topic.objects.select_related('created_by').prefetch_related('votes__user'),
+        topics = (
+            Topic.objects
+            .select_related('created_by')
+            .prefetch_related('votes__user')
+            ),
         pk=pk,
     )
-    # Lazily create expiry notifications when topic is first viewed after expiry
+    # Lazily create expiry notifications when topic is first viewed after expir
     if not topic.is_active:
         maybe_create_expiry_notification(topic)
 
@@ -67,7 +78,10 @@ def topic_create_view(request):
             topic = form.save(commit=False)
             topic.created_by = request.user
             topic.save()
-            messages.success(request, 'Your topic is live! Voting is open for 72 hours.')
+            messages.success(
+                request,
+                'Your topic is live! Voting is open for 72 hours.'
+            )
             return redirect('topics:detail', pk=topic.pk)
     else:
         form = TopicForm()

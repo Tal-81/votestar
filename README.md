@@ -1,6 +1,6 @@
 # ⭐ VoteStar — Django Voting Platform
 
-A clean, production-ready voting platform where authenticated users create topics and rate them 1–5 stars.
+Voting platform where authenticated users create topics and rate them 1–5 stars.
 
 ---
 
@@ -26,7 +26,6 @@ votestar/
 ├── static/
 │   ├── css/main.css      # Full design system
 │   └── js/stars.js       # Star picker UI
-├── .env                  # Local secrets (never commit)
 ├── requirements.txt
 ├── Procfile              # Heroku process
 └── runtime.txt           # Python version for Heroku
@@ -184,7 +183,7 @@ The UI uses a clean **editorial aesthetic**:
 - **Palette**: Indigo (#4f46e5) primary + Amber (#f59e0b) for star ratings + Rose (#f43f5e) for danger
 - **Star picker**: Pure vanilla JS — hover preview, click to select, hidden input synced
 - **Responsive**: Single-column on mobile (<768px), 2-column on tablets, grid on desktop
-- **No frameworks**: No Bootstrap, no Tailwind CDN — just one clean CSS file
+- **No frameworks**: No Bootstrap, no other css library - just one CSS file
 
 ---
 

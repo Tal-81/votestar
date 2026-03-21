@@ -1,12 +1,6 @@
-"""
-notifications/models.py
-Simple DB-based notifications. No real-time, no Celery.
-Created when a topic expires (72h) — triggered lazily when detail page is viewed.
-"""
 from django.db import models
 from django.conf import settings
 from topics.models import Topic
-
 
 class Notification(models.Model):
     user = models.ForeignKey(

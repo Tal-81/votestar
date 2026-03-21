@@ -24,7 +24,10 @@ def maybe_create_expiry_notification(topic):
 
     for user in recipients:
         if user == topic.created_by:
-            msg = f'Your topic "{topic.title}" has closed. It received {topic.vote_count} vote(s).'
+            msg = (
+                    f'Your topic "{topic.title}" has closed. '
+                    f'It received {topic.vote_count} vote(s).'
+                    )
             if topic.average_rating:
                 msg += f' Average rating: {topic.average_rating}★'
         else:

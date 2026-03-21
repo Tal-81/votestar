@@ -1,5 +1,4 @@
 """
-users/models.py
 Custom User model using email as the unique identifier instead of username.
 """
 from django.contrib.auth.models import AbstractUser, BaseUserManager
@@ -34,8 +33,8 @@ class User(AbstractUser):
     username = None                         # Remove the default username field
     email = models.EmailField(unique=True)  # Email is the login credential
 
-    USERNAME_FIELD = 'email'        # Use email for authentication
-    REQUIRED_FIELDS = []            # No extra required fields for createsuperuser
+    USERNAME_FIELD = 'email'    # Use email for authentication
+    REQUIRED_FIELDS = []        # No extra required fields for createsuperuser
 
     objects = UserManager()
 

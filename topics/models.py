@@ -1,5 +1,4 @@
 """
-topics/models.py
 A Topic is a poll. Business rules enforced here and in views:
   - end_time = created_at + 72h (auto-set in save())
   - only one active topic per user (enforced in form/view)
@@ -35,7 +34,7 @@ class Topic(models.Model):
     def __str__(self):
         return self.title
 
-    # ── Computed properties used in templates ─────────────────────────────────
+    # ── Computed properties used in templates ───────────────────────────────
 
     @property
     def is_active(self):

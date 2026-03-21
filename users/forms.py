@@ -7,7 +7,12 @@ from .models import User
 class RegisterForm(UserCreationForm):
     """Registration form using email + password."""
     email = forms.EmailField(
-        widget=forms.EmailInput(attrs={'placeholder': 'your@email.com', 'autofocus': True})
+        widget=forms.EmailInput(
+            attrs={
+                'placeholder': 'your@email.com',
+                'autofocus': True,
+            }
+        )
     )
     first_name = forms.CharField(
         max_length=30,
@@ -31,7 +36,9 @@ class LoginForm(AuthenticationForm):
     """Login form — username field is actually email."""
     username = forms.EmailField(
         label='Email',
-        widget=forms.EmailInput(attrs={'placeholder': 'your@email.com', 'autofocus': True})
+        widget=forms.EmailInput(
+            attrs={'placeholder': 'your@email.com', 'autofocus': True}
+        )
     )
     password = forms.CharField(
         widget=forms.PasswordInput(attrs={'placeholder': '••••••••'})
