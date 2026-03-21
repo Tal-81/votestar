@@ -23,7 +23,7 @@
     <form method="post">
       {% csrf_token %}
       <button type="submit" class="btn btn-danger btn-full">I understand — Delete My Account</button>
-      <a href="{% url 'users:profile' %}" class="btn btn-ghost btn-full">Cancel, keep my account</a>
+      <a href="{% url 'users:profile' %}" class="btn btn-ghost btn-full btn-cancel-delete">Cancel, keep my account</a>
     </form>
   </div>
 </div>

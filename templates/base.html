@@ -20,7 +20,7 @@
       </a>
       <div class="nav-links">
         {% if user.is_authenticated %}
-          <a href="{% url 'topics:create' %}" class="btn btn-sm btn-primary">+ New Topic</a>
+          <a href="{% url 'topics:create' %}" class="btn btn-sm btn-primary btn-block">+ New Topic</a>
           <a href="{% url 'notifications:list' %}" class="nav-link notif-link">
             🔔
             {% if unread_notifications_count %}
