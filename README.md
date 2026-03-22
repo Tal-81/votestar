@@ -6,6 +6,8 @@ Voting platform where authenticated users create topics and rate them 1–5 star
 ![The website is responsive](/images-readme/mockup.jpg)
 
 ---
+- Live Demo
+- [Votestar](https://votestar-d7391575c13f.herokuapp.com)
 
 ## Goals
 The goal of Votestar website is to provide a reliable and user-friendly online platform that allows users to share and explore opinions on various topics, helping people make informed decisions based on community feedback. The website aims to enhance the user experience through the following features:
