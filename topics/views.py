@@ -1,4 +1,3 @@
-"""topics/views.py"""
 from django.shortcuts import render, get_object_or_404, redirect
 from django.contrib.auth.decorators import login_required
 from django.contrib import messages
@@ -32,11 +31,7 @@ def topic_list_view(request):
 def topic_detail_view(request, pk):
     """Detail view for a single topic."""
     topic = get_object_or_404(
-        topics = (
-            Topic.objects
-            .select_related('created_by')
-            .prefetch_related('votes__user')
-            ),
+        Topic.objects.select_related('created_by').prefetch_related('votes__user'),
         pk=pk,
     )
     # Lazily create expiry notifications when topic is first viewed after expir

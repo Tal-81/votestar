@@ -59,7 +59,7 @@
       <!-- Star Rating Distribution -->
       {% if topic.vote_count > 0 %}
         <div class="rating-distribution">
-          <h3 class="dist-title">Rating Breakdown</h3>
+          <h2 class="dist-title">Rating Breakdown</h2>
           {% for i in "54321" %}
             {% with star=forloop.counter reversed_i=i %}
               <div class="dist-row">

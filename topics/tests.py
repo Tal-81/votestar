@@ -1,4 +1,3 @@
-"""topics/tests.py"""
 from django.test import TestCase, Client
 from django.urls import reverse
 from django.utils import timezone
@@ -27,8 +26,13 @@ class TopicModelTest(TestCase):
         self.assertFalse(topic.is_active)
 
     def test_ordering_newest_first(self):
+        from django.utils import timezone
+        from datetime import timedelta
         t1 = Topic.objects.create(title='First', created_by=self.user)
         t2 = Topic.objects.create(title='Second', created_by=self.user)
+        Topic.objects.filter(pk=t2.pk).update(
+            created_at=timezone.now() + timedelta(seconds=1)
+        )
         topics = list(Topic.objects.all())
         self.assertEqual(topics[0], t2)
 
