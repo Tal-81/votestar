@@ -196,7 +196,7 @@ The UI uses a clean **editorial aesthetic**:
 ---
 
 - Mobile wireframe:
-   ![home page](/images-readme/index_wireframe_m.jpg)
+-   ![home page](/images-readme/index_wireframe_m.jpg)
    ![profile page](/images-readme/profile_wireframe_m.jpg)
    ![register page](/images-readme/topic_wireframe_m.jpg)
    ![register page](/images-readme/login_wireframe_m.jpg)
@@ -361,7 +361,7 @@ The UI uses a clean **editorial aesthetic**:
         gunicorn==21.2.0
         whitenoise==6.6.0
 
-    - Django:
+- Django:
     - Python framework for web project development.
     - django-auth for managing user accounts in the system.
 
@@ -466,7 +466,7 @@ The UI uses a clean **editorial aesthetic**:
 ---
 
 - Jshint.
-- js file test: [site24x7.com](https://www.site24x7.com/tools/javascript-validator.html)
+- js file test at [site24x7.com](https://www.site24x7.com/tools/javascript-validator.html)
   - file name is stars.js
   - Valid javascript
   -   ![js test](/images-readme/js_test.jpg)
@@ -475,9 +475,9 @@ The UI uses a clean **editorial aesthetic**:
     - Link for: [test python files](https://pep8ci.herokuapp.com/)
     - [test python files](/images-readme/python_linter_settings.jpg)
     - [test python files](/images-readme/python_linter_notification_views.jpg)
-    - All Python code tested and no errors were found.
+    - All Python code tested and no errors.
   - Lighthouse
-    - Lighthouse  
+    - Lighthouse test tool in Google Chrome 
       ![light house test](/images-readme/lighthouse.jpg)
 
 ---
@@ -489,6 +489,7 @@ The UI uses a clean **editorial aesthetic**:
   - I got error in terminal when I run server and server does not run.
   - I asked Chatgpt to solve this Isuue and it suggest to change JWT to Django-allauth.
   - Fix: Just I removed JWT from the project and used default package Django-allauth, that is integrated in Django.
+  - JWT is suitable when you use Django Restful (DRF) and you have APIs.
 
 - Try to admin accounts cannot be deleted:
   - This function not excutable.
@@ -534,6 +535,23 @@ The UI uses a clean **editorial aesthetic**:
 ---
 
 ## Deployment
+
+### Running the Project Locally:
+-   follow these steps.
+    -   Clone the repository from GitHub:
+        -   ``git clone https://github.com/Dhiaa-alomari/pizzatasty.git``
+        -   ``cd tasty-pizza``
+        -   ``pip install -r requirements.txt``
+    -   Set up environment variables:
+        -   Create a .env file in the root directory and add the required environment variables such as:
+        -   ``SECRET_KEY=your_secret_key``
+        -   ``DATABASE_URL=your_database_url``
+    -   Run migrations to database:
+        -   ``python manage.py migrate``
+    -   Start the local server:
+        -   ``python manage.py runserver``
+    -   Show the application on web browser by this url address:
+        -   ``http://127.0.0.1:8000``
 
 ### Heroku deployment
 
@@ -622,6 +640,6 @@ heroku open
 ## Credits
 - All Code Institute staff.
 - Youtube tutorials.
-- AI modles: Chatgpt.
+- AI modles - Chatgpt.
 
-- [Back To Up](#voteStar)
+- [Back To Up](#votestar)
